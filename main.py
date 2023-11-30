@@ -13,7 +13,7 @@ import numpy as np
 import torch
 import argparse
 import pathlib
-
+import os 
 from deepSort import nn_matching
 from deepSort.tracker import Tracker
 from deepSort import generate_detections as gdet
@@ -48,6 +48,7 @@ def get_model(path_or_model='path/to/model.pt',device='0' , autoshape=True, isPo
     return hub_model.to(device)
 
 def detect_and_draw(input_path, output_path, device):
+    head, tail = os.path.split("/tmp/d/a.dat")
     detection_path = str(pathlib.Path().resolve())+'/weights/best.pt'
     kpt_path = str(pathlib.Path().resolve())+'/weights/yolov7-w6-pose.pt'
 
@@ -66,15 +67,13 @@ def detect_and_draw(input_path, output_path, device):
     encoder = gdet.create_box_encoder(model_filename, batch_size=1)
 
     success, image, video = load_input(input_path)
+    
     image_height, image_width, _ = image.shape
 
     frame_rate = 30.0
-    video_writer = cv2.VideoWriter(
-        output_path+'/output.mp4', cv2.VideoWriter_fourcc(*'mp4v'), frame_rate, (image_width, image_height))
     f = open(output_path+'/output.txt', 'w')
     total_time = 0
     person_ids = []
-    
     print("processing...")
     while success:
         start_time = time.time()
@@ -120,19 +119,13 @@ def detect_and_draw(input_path, output_path, device):
             fps_text = f"FPS: {fps:.2f}"
             # cv2.putText(image, fps_text, (10, 30),
             #             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-        cv2.imwrite("./data-tencon/output/yolo7/13.jpg",image)
-        video_writer.write(image)
+        cv2.imwrite("./"+ output_path+"/"+tail,image)
 
         if video is not None:
             success, image = video.read()
         else:
             success = False
-
-    if video is not None:
-        video.release()
-    video_writer.release()
     f.close()
-   
     print("done")
 
 
