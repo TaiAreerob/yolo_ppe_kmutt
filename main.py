@@ -48,7 +48,7 @@ def get_model(path_or_model='path/to/model.pt',device='0' , autoshape=True, isPo
     return hub_model.to(device)
 
 def detect_and_draw(input_path, output_path, device):
-    head, tail = os.path.split("/tmp/d/a.dat")
+    head, tail = os.path.split(input_path)
     detection_path = str(pathlib.Path().resolve())+'/weights/best.pt'
     kpt_path = str(pathlib.Path().resolve())+'/weights/yolov7-w6-pose.pt'
 

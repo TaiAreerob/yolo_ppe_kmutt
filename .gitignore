@@ -2,3 +2,5 @@
 weights/best.pt
 
 weights/yolov7-w6-pose.pt.zip
+
+.DS_Store
